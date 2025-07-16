@@ -1,7 +1,7 @@
 # Crypto Tracker (MERN)
 Tracks Top 10 Cryptocurrencies with live prices, auto-refresh, and historical data.
 
-#Features
+-Features
 Dashboard with Name, Symbol, Price, Market Cap, 24h % Change
 
 Auto-refresh every 30 mins
