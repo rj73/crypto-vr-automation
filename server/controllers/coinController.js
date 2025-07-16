@@ -30,7 +30,13 @@ exports.getCoins = async (req, res) => {
 exports.storeHistory = async (req, res) => {
   try {
     const coins = await CurrentCoin.find();
-    await CoinHistory.insertMany(coins);
+
+    const coinsWithoutId = coins.map(coin => {
+      const { _id, ...rest } = coin.toObject();
+      return rest;
+    });
+
+    await CoinHistory.insertMany(coinsWithoutId);
     res.status(201).json({ message: 'History saved' });
   } catch (error) {
     res.status(500).json({ message: 'Error storing history' });
