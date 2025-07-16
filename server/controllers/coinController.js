@@ -7,7 +7,11 @@ const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currenc
 exports.getCoins = async (req, res) => {
   try {
     const response = await axios.get(COINGECKO_URL);
-    const data = response.data.map(coin => ({
+    if(!response){
+      const data=await CurrentCoin.find({});
+    }
+    else{
+ const data = response.data.map(coin => ({
       coinId: coin.id,
       name: coin.name,
       symbol: coin.symbol,
@@ -16,6 +20,7 @@ exports.getCoins = async (req, res) => {
       change24h: coin.price_change_percentage_24h,
       timestamp: new Date(coin.last_updated),
     }));
+    }
 
     await CurrentCoin.deleteMany({});
     await CurrentCoin.insertMany(data);
