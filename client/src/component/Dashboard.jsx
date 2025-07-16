@@ -7,7 +7,7 @@ function Dashboard() {
   const [filterType, setFilterType] = useState('All');
 
   const fetchData = async () => {
-    const res = await fetch('http://localhost:2000/api/coins');
+    const res = await fetch('https://crypto-vr-automation.onrender.com/api/coins');
     let data = await res.json();
 
     setCoins(data);

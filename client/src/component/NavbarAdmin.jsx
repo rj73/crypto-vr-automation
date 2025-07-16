@@ -6,7 +6,7 @@ export default function NavbarAdmin() {
 
   const removeUser = async () => {
     try {
-      const res = await fetch('http://localhost:2000/api/history', {
+      const res = await fetch('https://crypto-vr-automation.onrender.com/api/history', {
         method: 'POST',
       });
 
