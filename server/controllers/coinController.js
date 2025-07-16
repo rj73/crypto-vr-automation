@@ -6,27 +6,31 @@ const COINGECKO_URL = 'https://api.coingecko.com/api/v3/coins/markets?vs_currenc
 
 exports.getCoins = async (req, res) => {
   try {
-    const response = await axios.get(COINGECKO_URL);
-    if(!response){
-      const data=await CurrentCoin.find({});
-    }
-    else{
- const data = response.data.map(coin => ({
-      coinId: coin.id,
-      name: coin.name,
-      symbol: coin.symbol,
-      priceUsd: coin.current_price,
-      marketCap: coin.market_cap,
-      change24h: coin.price_change_percentage_24h,
-      timestamp: new Date(coin.last_updated),
-    }));
-    }
+    let data = [];
 
-    await CurrentCoin.deleteMany({});
-    await CurrentCoin.insertMany(data);
+    try {
+      const response = await axios.get(COINGECKO_URL);
+
+      data = response.data.map(coin => ({
+        coinId: coin.id,
+        name: coin.name,
+        symbol: coin.symbol,
+        priceUsd: coin.current_price,
+        marketCap: coin.market_cap,
+        change24h: coin.price_change_percentage_24h,
+        timestamp: new Date(coin.last_updated),
+      }));
+
+      await CurrentCoin.deleteMany({});
+      await CurrentCoin.insertMany(data);
+
+    } catch (apiError) {
+      console.warn('API failed, using DB data:', apiError.message);
+      data = await CurrentCoin.find({});
+    }
 
     res.json(data);
-  } catch (error) {
+  }catch (error) {
   console.error('Error in getCoins:', error); 
   res.status(500).json({ message: 'Error fetching data', error: error.message });
 }
